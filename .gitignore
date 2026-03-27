@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+data/
+output/
+generated/
+checkpoints/
+runs/
+*.egg-info/
+.env
