@@ -74,11 +74,21 @@ def vae_loss(reconstruction, original, mu, log_var, kl_weight):
 
 
 def get_device(config_device):
-    """Determine which device to use for training."""
+    """
+    Determine which device to use for training.
+
+    Device priority:
+      1. CUDA  — NVIDIA GPUs (Linux/Windows gaming/workstation PCs)
+      2. MPS   — Apple Silicon GPU (M1/M2/M3/M4 MacBooks)
+      3. CPU   — Works everywhere (just slower)
+    """
     if config_device == "auto":
         if torch.cuda.is_available():
             device = torch.device("cuda")
             print(f"Using GPU: {torch.cuda.get_device_name(0)}")
+        elif torch.backends.mps.is_available():
+            device = torch.device("mps")
+            print("Using Apple Silicon GPU (MPS)")
         else:
             device = torch.device("cpu")
             print("Using CPU (training will be slower)")

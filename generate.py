@@ -122,7 +122,12 @@ if __name__ == "__main__":
                         help="Output directory")
     args = parser.parse_args()
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    elif torch.backends.mps.is_available():
+        device = torch.device("mps")
+    else:
+        device = torch.device("cpu")
     os.makedirs(args.output_dir, exist_ok=True)
 
     model, cfg = load_model(args.checkpoint, device)
